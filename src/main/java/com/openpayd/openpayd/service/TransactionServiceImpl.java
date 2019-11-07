@@ -26,10 +26,10 @@ public class TransactionServiceImpl implements TransactionService {
     @Autowired
     private AccountService accountService;
 
-    @Autowired
-    public TransactionServiceImpl(AccountService accountService) {
-        this.accountService = accountService;
-    }
+//    @Autowired
+//    public TransactionServiceImpl(AccountService accountService) {
+//        this.accountService = accountService;
+//    }
 
     /***
      *
@@ -44,34 +44,36 @@ public class TransactionServiceImpl implements TransactionService {
     public Transaction transfer(Long debitAccountId, Long creditAccountId, Transaction transaction) throws AccountNotFoundException {
         Account debitAccount = accountService.findById(debitAccountId);
         Account creditAccount = accountService.findById(creditAccountId);
-        transaction.setDebitAccount(debitAccount);
-        transaction.setCreditAccount(creditAccount);
 
         if (debitAccount.getBalanceStatus().equals(BalanceStatus.DR)) {
             debitAccount.setBalance(debitAccount.getBalance() + transaction.getAmount());
         } else {
             double newAmount = debitAccount.getBalance() - transaction.getAmount();
-            calculator(debitAccount, newAmount);
+            debitAccount = calculator(debitAccount, newAmount);
         }
 
         if (creditAccount.getBalanceStatus().equals(BalanceStatus.CR)) {
             creditAccount.setBalance(creditAccount.getBalance() + transaction.getAmount());
         } else {
             double newAmount = (creditAccount.getBalance() * -1) + transaction.getAmount();
-            calculator(creditAccount, newAmount);
+            creditAccount = calculator(creditAccount, newAmount);
         }
+        transaction.setDebitAccount(debitAccount);
+        transaction.setCreditAccount(creditAccount);
 
         return transactionDao.save(transaction);
     }
 
-    private void calculator(Account creditAccount, double newAmount) {
+    private Account calculator(Account account, double newAmount) {
         if (newAmount > 0) {
-            creditAccount.setBalanceStatus(BalanceStatus.CR);
-            creditAccount.setBalance(newAmount);
+            account.setBalanceStatus(BalanceStatus.CR);
+            account.setBalance(newAmount);
         } else {
-            creditAccount.setBalanceStatus(BalanceStatus.DR);
-            creditAccount.setBalance(Math.abs(newAmount));
+            account.setBalanceStatus(BalanceStatus.DR);
+            account.setBalance(Math.abs(newAmount));
         }
+
+        return account;
     }
 
 

@@ -39,7 +39,7 @@ public class TransactionController {
      */
     @PostMapping(value = "/transfer")
     public ResponseEntity<TransactionDTO> transfer(@RequestBody TransactionDTO transactionDTO) throws AccountNotFoundException {
-        return new ResponseEntity<>(transactionMapper.toDto(transactionService.transfer(transactionDTO.getDebitAccountId(), transactionDTO.getCreditAccountId(), transactionMapper.toEntity(transactionDTO))), HttpStatus.OK);
+        return new ResponseEntity<>(transactionMapper.toDto(transactionService.transfer(transactionDTO.getDebitAccountId(), transactionDTO.getCreditAccountId(), transactionMapper.toEntity(transactionDTO))), HttpStatus.CREATED);
     }
 
     /**

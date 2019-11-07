@@ -6,6 +6,7 @@ import com.openpayd.openpayd.mapper.ClientMapper;
 import com.openpayd.openpayd.service.ClientService;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +24,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/client")
 public class ClientController {
 
-    private final ClientService clientService;
+    private ClientService clientService;
 
-    @Autowired
     public ClientController(ClientService clientService) {
         this.clientService = clientService;
     }
+
 
     private final ClientMapper clientMapper = Mappers.getMapper(ClientMapper.class);
 
@@ -38,7 +39,7 @@ public class ClientController {
      */
     @PostMapping(value = "/new")
     public ResponseEntity<ClientDTO> save(@RequestBody ClientDTO clientDTO) {
-        return new ResponseEntity<>(clientMapper.toDto(clientService.save(clientMapper.toEntity(clientDTO))), HttpStatus.OK);
+        return new ResponseEntity<>(clientMapper.toDto(clientService.save(clientMapper.toEntity(clientDTO))), HttpStatus.CREATED);
     }
 
 
@@ -56,7 +57,7 @@ public class ClientController {
      *
      * @param clientId
      * @return
-     * @throws EntityNotFoundException
+     * @throws ClientNotFoundException
      */
 
     @GetMapping("/{clientId}")

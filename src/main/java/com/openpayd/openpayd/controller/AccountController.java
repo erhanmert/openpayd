@@ -52,7 +52,7 @@ public class AccountController {
      */
     @PostMapping(value = "/new")
     public ResponseEntity<AccountDTO> addAccount(@RequestBody AccountDTO accountDTO) throws ClientNotFoundException {
-        return new ResponseEntity<>(accountMapper.toDto(accountService.save(accountDTO.getClientId(), accountMapper.toEntity(accountDTO))), HttpStatus.OK);
+        return new ResponseEntity<>(accountMapper.toDto(accountService.save(accountDTO.getClientId(), accountMapper.toEntity(accountDTO))), HttpStatus.CREATED);
     }
 
 

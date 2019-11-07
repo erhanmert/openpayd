@@ -7,8 +7,6 @@ import com.openpayd.openpayd.entity.Account;
 import com.openpayd.openpayd.entity.Client;
 import com.openpayd.openpayd.exception.AccountNotFoundException;
 import com.openpayd.openpayd.exception.ClientNotFoundException;
-import com.openpayd.openpayd.mapper.AccountMapper;
-import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,14 +24,9 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private ClientDao clientDao;
 
-    private final AccountDao accountDao;
-
-    private final AccountMapper accountMapper = Mappers.getMapper(AccountMapper.class);
-
     @Autowired
-    public AccountServiceImpl(AccountDao accountDao) {
-        this.accountDao = accountDao;
-    }
+    private AccountDao accountDao;
+
 
     /**
      * Creates a new account.
@@ -49,12 +42,12 @@ public class AccountServiceImpl implements AccountService {
         Client client = clientDao.findById(clientId).
                 orElseThrow(() -> new ClientNotFoundException("Could not find entity with id: " + clientId));
 
-        account.setClient(clientDao.findById(clientId).get());
+        account.setClient(client);
         return accountDao.save(account);
     }
 
     /**
-     * Selects a driver by id.
+     * Selects a account by clientId.
      *
      * @param clientId
      * @return found accounts

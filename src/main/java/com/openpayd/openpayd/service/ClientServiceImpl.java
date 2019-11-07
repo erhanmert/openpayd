@@ -5,8 +5,6 @@ import com.openpayd.openpayd.dao.ClientDao;
 import com.openpayd.openpayd.entity.Account;
 import com.openpayd.openpayd.entity.Client;
 import com.openpayd.openpayd.exception.ClientNotFoundException;
-import com.openpayd.openpayd.mapper.ClientMapper;
-import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +19,9 @@ import java.util.Optional;
  */
 @Service
 public class ClientServiceImpl implements ClientService {
-    private final ClientDao clientDao;
-    private final ClientMapper clientMapper = Mappers.getMapper(ClientMapper.class);
 
     @Autowired
-    public ClientServiceImpl(ClientDao clientDao) {
-        this.clientDao = clientDao;
-    }
+    private ClientDao clientDao;
 
 
     /***
